@@ -1,0 +1,17 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      nodejs: 10
+  build:
+    commands:
+      - sam build
+  post_build:
+    commands:
+      - sam package --output-template-file outputSamTemplate.yaml --s3-bucket barz-bot-backend
+
+artifacts:
+  type: zip
+  files:
+    - outputSamTemplate.yaml
