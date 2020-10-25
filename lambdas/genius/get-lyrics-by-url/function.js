@@ -2,9 +2,9 @@ const axios = require('axios');
 const cheerio = require('cheerio');
 
 exports.handler = async (event) => {
-  console.log(event)
+  const songURL = event.body
   let lyrics;
-  await axios.get('https://genius.com/Aaron-may-temporary-lyrics').then((response) => {
+  await axios.get(songURL).then((response) => {
     const $ = cheerio.load(response.data)
     lyrics = $('div[class="lyrics"]').text().trim()
   });
