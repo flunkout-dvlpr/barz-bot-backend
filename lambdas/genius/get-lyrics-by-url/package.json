@@ -1,0 +1,8 @@
+{
+  "name": "get-lyrics-by-url",
+  "version": "0.0.1",
+  "main": "function.js",
+  "dependencies": {
+    "axios": "latest"
+  }
+}
