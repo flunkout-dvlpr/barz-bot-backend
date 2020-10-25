@@ -18,17 +18,23 @@ Globals:
         ResponseParameters:
           Headers:
             Access-Control-Allow-Origin: "'*'"
-
+Resources:
   getLyrics:
     Type: 'AWS::Serverless::Function'
     Properties:    
       Handler: function.handler
       Runtime: nodejs10.x
-      CodeUri: ./lambdas/genius/get-lyrics-by-urs
+      CodeUri: ./lambdas/genius/get-lyrics-by-url
       Description: 'Lambda function for scrape Genius song URL for lyrics'
       MemorySize: 128
       Timeout: 30
-      Role: 'arn:aws:iam::672841565100:role/CognitoLambdaRole'
+      Role: 'arn:aws:iam::672841565100:role/LambdaRole'
+      Events:
+        function:
+          Type: Api
+          Properties:
+            Path: /genius/get-lyrics-by-url
+            Method: get
       VpcConfig:
         SecurityGroupIds:
           - sg-fb2c0281
@@ -36,3 +42,4 @@ Globals:
           - subnet-0afb59bb4aef42c2c
           - subnet-03576e05e1e4e7a10
           - subnet-0c012bb7fafb41627
+
