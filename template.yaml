@@ -34,7 +34,7 @@ Resources:
           Type: Api
           Properties:
             Path: /genius/get-lyrics-by-url
-            Method: get
+            Method: post
       VpcConfig:
         SecurityGroupIds:
           - sg-fb2c0281
