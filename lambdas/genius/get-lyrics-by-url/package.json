@@ -3,6 +3,7 @@
   "version": "0.0.1",
   "main": "function.js",
   "dependencies": {
-    "axios": "latest"
+    "axios": "latest",
+    "cheerio": "latest"
   }
 }
