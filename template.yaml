@@ -19,6 +19,15 @@ Globals:
           Headers:
             Access-Control-Allow-Origin: "'*'"
 Resources:
+  BarzBotLibrary:
+    Type: 'AWS::Serverless::LayerVersion'
+    Properties:
+      ContentUri: ./lib/python/
+      CompatibleRuntimes:
+        - python3.7
+    Metadata: 
+      BuildMethod: python3.7
+
   getLyrics:
     Type: 'AWS::Serverless::Function'
     Properties:    
@@ -43,3 +52,30 @@ Resources:
           - subnet-03576e05e1e4e7a10
           - subnet-0c012bb7fafb41627
 
+
+  createArtwork:
+    Type: 'AWS::Serverless::Function'
+    Properties:    
+      Handler: function.handler
+      Runtime: python3.7
+      CodeUri: ./lambdas/artwork/create
+      Description: 'Lambda function to generate artwork with lyrics'
+      MemorySize: 128
+      Timeout: 30
+      Role: 'arn:aws:iam::672841565100:role/LambdaRole'
+      Events:
+        function:
+          Type: Api
+          Properties:
+            Auth:
+            Path: /artwork/create
+            Method: post
+      Layers:
+        - !Ref BarzBotLibrary
+      VpcConfig:
+        SecurityGroupIds:
+          - sg-fb2c0281
+        SubnetIds:
+          - subnet-efa0a595
+          - subnet-d169059d
+          - subnet-cb25eaa0
