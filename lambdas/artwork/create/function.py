@@ -45,7 +45,7 @@ def handler(event, context):
   albumArtWorkImg.paste(coverImg, (180,180))
 
   draw   = ImageDraw.Draw(albumArtWorkImg)
-  r = requests.get('https://github.com/ProgrammingFonts/ProgrammingFonts/raw/master/Droid-Sans-Mono/droid-sans-mono-1.00/Droid%20Sans%20Mono.ttf', allow_redirects=True)
+  r = requests.get('https://barz-bot-images.s3.us-east-2.amazonaws.com/Droid+Sans+Mono.ttf', allow_redirects=True)
   font = ImageFont.truetype(io.BytesIO(r.content), size=22)
 
   y = 850
