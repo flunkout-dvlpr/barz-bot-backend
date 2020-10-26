@@ -76,6 +76,6 @@ Resources:
         SecurityGroupIds:
           - sg-fb2c0281
         SubnetIds:
-          - subnet-efa0a595
-          - subnet-d169059d
-          - subnet-cb25eaa0
+          - subnet-0afb59bb4aef42c2c
+          - subnet-03576e05e1e4e7a10
+          - subnet-0c012bb7fafb41627
