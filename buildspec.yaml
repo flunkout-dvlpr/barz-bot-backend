@@ -10,7 +10,7 @@ phases:
       - sam build
   post_build:
     commands:
-      - sam package --output-template-file outputSamTemplate.yaml --s3-bucket barz-bot-api
+      - sam package --output-template-file outputSamTemplate.yaml --s3-bucket api-barz-bot
 
 artifacts:
   type: zip
