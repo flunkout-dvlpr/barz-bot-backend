@@ -4,7 +4,6 @@ import json
 import boto3
 import requests
 from urllib.parse import urlparse
-from urllib.request import urlopen
 from colorthief import ColorThief
 from PIL import Image, ImageDraw, ImageFont, ImageOps
 
@@ -17,20 +16,20 @@ def handler(event, context):
   s3 = boto3.client('s3')
   imageID = imageURL.split('/')[-1]
 
-  #Download image and Upload to S3 bucket
-  response = requests.get(imageURL)
+
+  #Read image url as raw data and upload to S3
+  response = requests.get(imageURL, stream=True)
+
   if response.status_code==200:
-      raw_data = response.content
       url_parser = urlparse(imageURL)
       temp_file =  '/tmp/' + os.path.basename(url_parser.path)
 
   with open(temp_file, 'wb') as new_file:
-      new_file.write(raw_data)
+      new_file.write(response.content)
 
-  # Open the server file as read mode and upload in AWS S3 Bucket.
-  data = open(temp_file, 'rb')
-  s3.put_object(Bucket='barz-bot-images', Key='{}/{}.jpg'.format(spUser, imageID), Body=data)
-  data.close()
+  # raw_data = response.raw
+  # s3.upload_fileobj(raw_data, 'images-barz-bot', '{}/{}.jpg'.format(spUser, imageID))
+
 
   # Scan image for color palette
   color_thief = ColorThief(temp_file)
@@ -45,7 +44,7 @@ def handler(event, context):
   albumArtWorkImg.paste(coverImg, (180,180))
 
   draw   = ImageDraw.Draw(albumArtWorkImg)
-  r = requests.get('https://barz-bot-images.s3.us-east-2.amazonaws.com/Droid+Sans+Mono.ttf', allow_redirects=True)
+  r = requests.get('https://images-barz-bot.s3.us-east-2.amazonaws.com/DroidSansMono.ttf', allow_redirects=True)
   font = ImageFont.truetype(io.BytesIO(r.content), size=22)
 
   y = 850
@@ -59,8 +58,10 @@ def handler(event, context):
 
   temp_image_data = io.BytesIO()
   albumArtWorkImg.save(temp_image_data, format="JPEG")
-  s3.put_object(Bucket='barz-bot-images', Key='{}/{}.jpg'.format(spUser, imageID), Body=temp_image_data.getvalue())
-  fileLink = 'https://barz-bot-images.s3.us-east-2.amazonaws.com/{}/{}.jpg'.format(spUser, imageID)
+  albumArtWorkImgData = temp_image_data.getvalue()
+
+  s3.put_object(Bucket='images-barz-bot', Key='{}/{}.jpg'.format(spUser, imageID), Body=albumArtWorkImgData)
+  fileLink = 'https://images-barz-bot.s3.us-east-2.amazonaws.com/{}/{}.jpg'.format(spUser, imageID)
   return {
     'statusCode': 200,
     'headers': {
