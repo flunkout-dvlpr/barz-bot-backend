@@ -46,8 +46,8 @@ def handler(event, context):
   albumArtWorkImg.paste(coverImg, (180,180))
 
   draw   = ImageDraw.Draw(albumArtWorkImg)
-  r = requests.get('https://images-barz-bot.s3.us-east-2.amazonaws.com/DroidSansMono.ttf', allow_redirects=True)
-  font = ImageFont.truetype(io.BytesIO(r.content), size=22)
+  r = requests.get('https://images-barz-bot.s3.us-east-2.amazonaws.com/OpenSansRegular.ttf', allow_redirects=True)
+  font = ImageFont.truetype(io.BytesIO(r.content), size=28)
 
   y = 850
   for line in lyrics:
@@ -71,11 +71,12 @@ def handler(event, context):
   fileLink = 'https://images-barz-bot.s3.us-east-2.amazonaws.com/{}/{}.jpeg'.format(spUser, imageID)
 
   ########## Generate HTML Twitter Card (Social Share)
-  twitterCardHTML = '<!DOCTYPE html><html>  <style>   img {     display: block;     margin-top: 10rem;  margin-left: auto;      margin-right: auto;   }   .center {     margin: 0;      position: absolute;     top: 65%;     left: 50%;      -ms-transform: translate(-50%, -50%);     transform: translate(-50%, -50%);   }   .barzbot-button {   background-color:#44c767;     border:1px solid #18ab29;     display:inline-block; cursor:pointer;     color:#ffffff;      font-family:Arial;      font-size:17px;padding:10px 24px;     text-decoration:none;     text-shadow:0px 1px 0px #2f6627;  }.barzbot-button:active {     position:relative;      top:1px;    }     </style>  <head>    <title>WEBPAGE-TITLE</title>    <meta charset=utf-8>    <meta name=description content="Created with @BarzBot!">    <meta name=format-detection content="telephone=no">   <meta name=msapplication-tap-highlight content=no>    <meta name=viewport content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">    <meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@BarzBot">   <meta name="twitter:creator" content="@BarzBot">    <meta name="twitter:title" content="SONG-TITLE">    <meta name="twitter:description" content="SONG-LYRICS">   <meta name="twitter:image" content="IMAGE-LINK">  </head> <body style="background-color: #1d1d1d;">       <div class="verticalcenter">      <img style="width:20rem;" src="IMAGE-LINK"/>      </div>    <div class="center">      <a href="http://webapp-barz-bot.s3-website.us-east-2.amazonaws.com/#/" class="barzbot-button">Try BarzBot!</a>    </div>  </body></html>'
+  twitterCardHTML = '<!DOCTYPE html><html>  <style>   .center {     display: flex;      justify-content: center;      align-items: center;    }   .center-image {     margin-top: 10rem;      display: flex;      justify-content: center;      align-items: center;    }   .barzbot-button {     margin-top: .5rem;      background-color:#44c767;     border:1px solid #18ab29;     display:inline-block; cursor:pointer;     color:#ffffff;      font-family:Arial;      font-size:17px;padding:10px 24px;     text-decoration:none;     text-shadow:0px 1px 0px #2f6627;  }.barzbot-button:active {     position:relative;      top:1px;    }     </style>  <head>    <title>WEBPAGE-TITLE</title>    <meta charset=utf-8>    <meta name=description content="Created with @BarzBot!">    <meta name=format-detection content="telephone=no">   <meta name=msapplication-tap-highlight content=no>    <meta name=viewport content="user-scalable=no,initial-scale=1,maximum-scale=1,minimum-scale=1,width=device-width">    <meta name="twitter:card" content="summary_large_image"><meta name="twitter:site" content="@BarzBot">   <meta name="twitter:creator" content="@BarzBot">    <meta name="twitter:title" content="SONG-TITLE">    <meta name="twitter:description" content="SONG-LYRICS">   <meta name="twitter:image" content="IMAGE-LINK">  </head> <body style="background-color: #1d1d1d;">       <div class="center-image">      <img style="width:20rem;" src="IMAGE-LINK"/>      </div>    <div class="center">      <a href="http://webapp-barz-bot.s3-website.us-east-2.amazonaws.com/#/" class="barzbot-button">Try BarzBot!</a>    </div>    <div class="center">      <a href="IMAGE-LINK" class="barzbot-button">Download Art!</a>   </div>  </body></html>'
   filedata = twitterCardHTML.replace('WEBPAGE-TITLE', 'Created Using @BarzBot')
   filedata = filedata.replace('SONG-TITLE', '{} - {}'.format(song, artist))
-  lyricsStr = ('\n').join([ line['text'] for line in lyrics ])
-  filedata = filedata.replace('SONG-LYRICS', lyricsStr)
+  # lyricsStr = ('\n').join([ line['text'] for line in lyrics ])
+  # filedata = filedata.replace('SONG-LYRICS', lyricsStr)
+  filedata = filedata.replace('SONG-LYRICS', 'Create Your Own! Visit @BarzBot !')
   filedata = filedata.replace('IMAGE-LINK', fileLink)
   print('JPEG', 'https://images-barz-bot.s3.us-east-2.amazonaws.com/{}/{}.jpeg'.format(spUser, imageID))
   print('HTML', 'https://images-barz-bot.s3.us-east-2.amazonaws.com/{}/{}.html'.format(spUser, imageID))
