@@ -17,16 +17,23 @@ exports.handler = async (event) => {
       })
     };
   }
-  let lyrics;
+  let lyrics = []
   await axios.get(songURL).then((response) => {
     const $ = cheerio.load(response.data)
-    lyrics = $('div[class="lyrics"]').text().trim()
-  });
-
-  if (lyrics) {
-    lyrics = lyrics.split(/\r\n|\r|\n/)
-  }
-
+    // lyrics = $('div[class="lyrics"]').text().trim()
+    // lyrics =  $('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]').text() // .trim()
+    $('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]').each(function (i, e) {
+      for (const [key, value] of Object.entries(e.children)) {
+        if (value.type === 'text') {
+          lyrics.push(value.data)
+        }
+      }
+    })
+  })
+  console.log(lyrics)
+  // if (lyrics) {
+  //   lyrics = lyrics.split(/\r\n|\r|\n/)
+  // }
   return {
     statusCode: 200,
     headers: {
