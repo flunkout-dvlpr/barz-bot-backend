@@ -3,6 +3,7 @@ const cheerio = require('cheerio');
 
 exports.handler = async (event) => {
   const songURL = event.body
+  console.log(songURL)
   if (songURL.includes('annotated')) {
     console.log('This one failed')
     return {
@@ -20,6 +21,7 @@ exports.handler = async (event) => {
   let lyrics = []
   await axios.get(songURL).then((response) => {
     const $ = cheerio.load(response.data)
+    console.log($('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]'))
     // lyrics = $('div[class="lyrics"]').text().trim()
     // lyrics =  $('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]').text() // .trim()
     $('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]').each(function (i, e) {
