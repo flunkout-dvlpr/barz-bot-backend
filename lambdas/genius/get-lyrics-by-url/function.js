@@ -21,21 +21,16 @@ exports.handler = async (event) => {
   let lyrics = []
   await axios.get(songURL).then((response) => {
     const $ = cheerio.load(response.data)
-    console.log($('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]'))
-    // lyrics = $('div[class="lyrics"]').text().trim()
-    // lyrics =  $('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]').text() // .trim()
-    $('div[class="Lyrics__Container-sc-1ynbvzw-6 krDVEH"]').each(function (i, e) {
-      for (const [key, value] of Object.entries(e.children)) {
+    lyric_objs = Object.values(($('div[class*="Lyrics__Container"]').get()))
+    lyric_objs.forEach(obj => {
+      for (const [key, value] of Object.entries(obj.children)) {
         if (value.type === 'text') {
-          lyrics.push(value.data)
+          const bar = value.data.split(/\r\n|\r|\n/)
+          lyrics.push(bar)
         }
       }
     })
   })
-  console.log(lyrics)
-  // if (lyrics) {
-  //   lyrics = lyrics.split(/\r\n|\r|\n/)
-  // }
   return {
     statusCode: 200,
     headers: {
