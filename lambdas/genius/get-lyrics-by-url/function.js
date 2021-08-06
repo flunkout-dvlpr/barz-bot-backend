@@ -5,7 +5,8 @@ function getChildrenText (children) {
   text = []
   children.forEach(child => {
     if (child.type === 'text') {
-      text.push(child.data)
+      const cleanText = child.data.replace(/\]|\[|\)|\(/g,'')
+      text.push(cleanText)
       // console.log(child.data)
     } else if (child.type === 'tag') {
       if (child.name === 'a') {
@@ -14,7 +15,8 @@ function getChildrenText (children) {
             if (grandChild.children.length) {
               grandChild.children.forEach(greatGrandChild => {
                 if (greatGrandChild.data) {
-                  text.push(greatGrandChild.data)
+                  const cleanText = greatGrandChild.data.replace(/\]|\[|\)|\(/g,'')
+                  text.push(cleanText)
                   // console.log(greatGrandChild.data)
                 }
               })
@@ -52,7 +54,6 @@ exports.handler = async (event) => {
       // console.log(Object.keys(obj))
       if (obj.children.length) {
         const bar = getChildrenText(obj.children)
-        console.log(bar)
         lyrics = lyrics.concat(bar)
       }
     })
