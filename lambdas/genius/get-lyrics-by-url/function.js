@@ -1,6 +1,31 @@
 const axios = require('axios');
 const cheerio = require('cheerio');
 
+function getChildrenText (children) {
+  text = []
+  children.forEach(child => {
+    if (child.type === 'text') {
+      text.push(child.data)
+      // console.log(child.data)
+    } else if (child.type === 'tag') {
+      if (child.name === 'a') {
+        if (child.children.length) {
+          child.children.forEach(grandChild => {
+            if (grandChild.children.length) {
+              grandChild.children.forEach(greatGrandChild => {
+                if (greatGrandChild.data) {
+                  text.push(greatGrandChild.data)
+                  // console.log(greatGrandChild.data)
+                }
+              })
+            }
+          })
+        }
+      }
+    }
+  })
+  return text
+}
 exports.handler = async (event) => {
   const songURL = event.body
   console.log(songURL)
@@ -21,16 +46,20 @@ exports.handler = async (event) => {
   let lyrics = []
   await axios.get(songURL).then((response) => {
     const $ = cheerio.load(response.data)
-    lyric_objs = Object.values(($('div[class*="Lyrics__Container"]').get()))
+    // console.log($("div[class^='Lyrics__Container']").text())
+    lyric_objs = Object.values(($("div[class^='Lyrics__Container']").get()))
     lyric_objs.forEach(obj => {
-      for (const [key, value] of Object.entries(obj.children)) {
-        if (value.type === 'text') {
-          const bar = value.data.split(/\r\n|\r|\n/)
-          lyrics.push(bar)
-        }
+      // console.log(Object.keys(obj))
+      if (obj.children.length) {
+        const bar = getChildrenText(obj.children)
+        console.log(bar)
+        lyrics = lyrics.concat(bar)
       }
     })
   })
+
+  console.log(lyrics)
+
   return {
     statusCode: 200,
     headers: {
